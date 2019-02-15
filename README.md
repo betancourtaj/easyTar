@@ -1,4 +1,4 @@
-# easyTar
+### easyTar
 A bash scipt that allows you to create, extract, or view a tar.
 
 To use script first call the script name followed by a command to either archive, extract, or view.
@@ -9,7 +9,8 @@ To use script first call the script name followed by a command to either archive
 
 ![alt Text](https://cdn.discordapp.com/attachments/546009007287173149/546009094910246983/Screen_Shot_2019-02-15_at_11.38.00_AM.png)
 
-Archive:
+#Archive:
+  
   When you input the archive command an options screen will appear.
 
   ![alt Text](https://cdn.discordapp.com/attachments/546009007287173149/546010316564070420/Screen_Shot_2019-02-15_at_11.49.44_AM.png)
