@@ -9,7 +9,7 @@ To use script first call the script name followed by a command to either archive
 
 ![alt Text](https://cdn.discordapp.com/attachments/546009007287173149/546009094910246983/Screen_Shot_2019-02-15_at_11.38.00_AM.png)
 
-#Archive:
+### Archive:
   
   When you input the archive command an options screen will appear.
 
