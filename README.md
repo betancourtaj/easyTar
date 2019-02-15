@@ -30,7 +30,7 @@ To use script first call the script name followed by a command to either archive
   ![alt Text](https://cdn.discordapp.com/attachments/546009007287173149/546012090075185155/Screen_Shot_2019-02-15_at_11.56.23_AM.png)
 
 
-### Extract
+### Extract:
 
   When you input the extract command you will be asked to enter the name of the archive.
   
@@ -40,7 +40,7 @@ To use script first call the script name followed by a command to either archive
   
   ![alt Text](https://cdn.discordapp.com/attachments/546009007287173149/546014876771024908/Screen_Shot_2019-02-15_at_12.07.12_PM.png)
   
-### View
+### View:
 
   When you input the view command you will be asked to enter the name of the archive you want to view.
   
