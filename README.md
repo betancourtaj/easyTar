@@ -30,6 +30,20 @@ To use script first call the script name followed by a command to either archive
   ![alt Text](https://cdn.discordapp.com/attachments/546009007287173149/546012090075185155/Screen_Shot_2019-02-15_at_11.56.23_AM.png)
 
 
+### Extract
 
+  When you input the extract command you will be asked to enter the name of the archive.
+  
+  ![alt Text](https://cdn.discordapp.com/attachments/546009007287173149/546014876741664768/Screen_Shot_2019-02-15_at_12.06.55_PM.png)
+  
+  You will then be asked to enter the directory where the archive will be extracted.
+  
+  ![alt Text](https://cdn.discordapp.com/attachments/546009007287173149/546014876771024908/Screen_Shot_2019-02-15_at_12.07.12_PM.png)
+  
+### View
+
+  When you input the view command you will be asked to enter the name of the archive you want to view.
+  
+  ![alt Text](https://cdn.discordapp.com/attachments/546009007287173149/546015624472821761/Screen_Shot_2019-02-15_at_12.10.54_PM.png)
 
 
