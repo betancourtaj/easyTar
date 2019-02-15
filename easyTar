@@ -1,0 +1,378 @@
+#!/bin/bash
+
+############################################################################################
+#A script that allows you to archive files, extract files from a tarball, or view the	   #
+#files in a tarball.						   			   #
+#											   #
+#Author - Alex Betancourt								   #
+############################################################################################
+
+#----------------------------------------------------------------#
+#function displayOptions - displays the options allowed in the	 #
+#script to execute						 #
+#			 					 #
+#Input - N/A		  	 				 #
+#Output - "Select your options:" to stdout			 #
+#								 #
+#	  "	v - "show the progress of archiving" to stdout	 #
+#								 #
+#	  "	j - use bzip2"	to stdout			 #
+#								 #
+#	  "	z - use gzip" to stdout				 #
+#----------------------------------------------------------------#
+displayOptions () {
+	echo "Select your options:"
+	echo "		v - show the progress of archiving"
+	echo "		j - use bzip2"
+	echo "		z - use gzip"
+}
+
+#----------------------------------------------------------------#
+#function quit - exits the script if ":q" is typed when a prompt # 
+#		 displays.					 #
+#								 #
+#Input - any input that is read after a prompt	 		 #
+#Output - N/A							 #
+#----------------------------------------------------------------#
+quit () {
+	#conditional to check if user entered ":q"
+	if [[ "$1" == ":q" ]]
+	then
+		exit 1
+	fi
+}
+
+#----------------------------------------------------------------#
+#function createTarballCurrDir - creates a tar archive in the	 #
+#			     current directory.			 #
+#								 #
+#Input - 		  	 				 #
+#	  options - Options used to determine how to format the  #
+#		    tarball. 					 #
+#								 #
+#	  userFiles - the list of files that the user wants to   #
+#		      place in the tarball.			 #
+#								 #
+#	  tarballName - the name of the tarball the user entered.#
+#								 #
+#Output - N/A							 #
+#----------------------------------------------------------------#
+createTarballCurrDir () {
+        options="$1"
+        userFiles="$2"
+        tarballName="$3"
+	
+	#conditional to check what kind of tarball the user wants
+	if [[ "$options" == *"j"* && "$options" == *"v"* ]]
+	then
+                tarballName="$tarballName.bz2"
+                eval "tar -czvf $tarballName $userFiles"
+        elif [[ "$options" == *"j"* ]]
+	then
+                tarballName="$tarballName.bz2"
+                eval "tar -czf $tarballName $userFiles"
+        elif [[ "$options" == *"z"* && "$options" == *"v"* ]]
+	then
+                tarballName="$tarballName.tgz"
+                eval "tar -czvf $tarballName $userFiles"
+        elif [[ "$options" == *"z"* ]]
+	then
+                tarballName="$tarballName.tgz"
+                "tar -czf $tarballName $userFiles"
+        elif [[ "$options" == *"v"* ]]
+	then
+                tarballName="$tarballName.tar"
+                eval "tar -cvf $tarballName $userFiles"             
+        elif [[ "$options" == "" ]]
+	then
+                tarballName="$tarballName.tar"
+                eval "tar -cf $tarballName $userFiles"
+	else
+		echo "Can't create tarball"
+        fi
+}
+
+#----------------------------------------------------------------#
+#function createTarballWithDiffDir - creates a tar archive in    #
+#				      a directory that the user  #
+#				      enters.                    #
+#                                                                #
+#Input -                                                         #
+#	  fileDir - desired directory to archive files from	 #
+#								 #
+#         options - Options used to determine how to format the  #
+#		    tarball.                                     #
+#                                                                #
+#         userFiles - the list of files that the user wants to   #
+#		      place in the tarball.                      #
+#                                                                #
+#         tarballName - the name of the tarball the user entered.#
+#                                                                #
+#Output - N/A			                                 #
+#----------------------------------------------------------------#
+createTarballWithDiffDir () {
+	fileDir="$1"
+        options="$2"
+        userFiles="$3"
+        tarballName="$4"
+	
+	#conditonal to check what kind of tarball the user wants
+	if [[ "$options" == *"j"* && "$options" == *"v"* ]]
+	then
+                tarballName="$tarballName.bz2"
+                eval "tar -czvf $tarballName -C $fileDir $userFiles"
+        elif [[ "$options" == *"j"* ]]
+	then
+                tarballName="$tarballName.bz2"
+                eval "tar -czf $tarballName -C $fileDir $userFiles"
+        elif [[ "$options" == *"z"* && "$options" == *"v"* ]]
+	then
+                tarballName="$tarballName.tgz"
+                eval "tar -czvf $tarballName -C $fileDir $userFiles"
+        elif [[ "$options" == *"z"* ]]
+	then
+                tarballName="$tarballName.tgz"
+                "tar -czf $tarballName -C $fileDir $userFiles"
+        elif [[ "$options" == *"v"* ]]
+	then
+                tarballName="$tarballName.tar"
+                eval "tar -cvf $tarballName -C $fileDir $userFiles"
+        elif [[ "$options" == "" ]]
+	then
+                tarballName="$tarballName.tar"
+                eval "tar -cf $tarballName -C $fileDir $userFiles"
+	else
+		echo "Can't create tarball"
+        fi
+}
+
+#----------------------------------------------------------------#
+#function createTarball - creates a tarball based on input. If   #
+#			  the user enters star then the tarball  #
+#			  is created with files in the current	 #
+#			  directory. If the user doesn't press	 #
+#			  star then tarball is created using	 #
+#			  files in a different directory.	 #
+#                                                                #
+#Input -                                                         #
+#         fileDir - desired directory to archive files from      #
+#                                                                #
+#         options - Options used to determine how to format the  #
+#                   tarball.                                     #
+#                                                                #
+#         userFiles - the list of files that the user wants to   #
+#                     place in the tarball.                      #
+#                                                                #
+#         tarballName - the name of the tarball the user entered.#
+#                                                                #
+#Output - N/A                                                    #
+#----------------------------------------------------------------#
+createTarball () {
+	fileDir="$1"
+	options="$2"
+	userFiles="$3"
+	tarballName="$4"
+
+	#conditional to check if user want to create a tarball with files in the current directory or different directory
+	if [[ "$fileDir" == "*" ]]
+	then 
+		#Run CreateTarballCurrDir with the arguments: options, userFiles, and tarballName
+		createTarballCurrDir "$options" "$userFiles" "$tarballName"
+	else
+		#Run CreateTarballWithDifDirr with the arguments: fileDir, options, userFiles, and tarballName
+		createTarballWithDiffDir "$fileDir" "$options" "$userFiles" "$tarballName"
+	fi
+}
+
+#----------------------------------------------------------------#
+#function archive - prompts user for different commands. Based   #
+#		    off those commands a tarball is created	 #
+#                                                                #
+#Input - N/A                                                     #
+#                                                                #
+#Output - "Select your options:" to stdout                       #
+#								 #
+#         "     v - "show the progress of archiving" to stdout   #
+#								 #
+#         "     j - use bzip2"  to stdout                        #
+#								 #
+#         "     z - use gzip" to stdout                          #
+#								 #
+#	  "Can't bzip and gzip. Try again with only one" to 	 #
+#	  stdout						 #
+#								 #
+#	  "Input the directory containing the source files. "*"  #
+#	   for the current directory" to stdout			 #
+#								 #
+#	  "Input the files/directories to archive. ":q" to quit, #
+#	   ":a" to proceed archiving" to stdout			 #
+#	  							 #
+#	  "Input the name of the archive" to stdout		 #
+#----------------------------------------------------------------#
+archive () {
+	#Run displayOptions
+	displayOptions
+	
+	read -p "vcutar options> " options
+	quit "$options"
+	
+	#while loop to make sure user doesn't enter both j and z commands.	
+	while [[ "$options" == *"j"* && "$options" == *"z"* ]] 
+	do
+		echo "Can't bzip and gzip. Try again with only one"
+		read -p "vcutar options> " options
+		quit "$options"
+	done
+	
+	echo "Input the directory containing the source files. \"*\" for the current directory"
+	read -p "vcutar directory> " fileDir
+	quit "$fileDir"
+
+	userFile=''
+	userFiles=''
+
+	#while loop that keeps asking user to input files until user enters ":a" or ":q"
+	while [[ "$userFile" != ":a" ]]
+	do
+		echo "Input the files/directories to archive. \":q\" to quit, \":a\" to proceed archiving"
+		read -p "vcutar file> " userFile
+		quit "$userFile"
+		
+		#conditional to check if the user entered ":a"
+		if [[ "$userFile" != ":a" ]]; then
+			userFiles="$userFiles $userFile"
+		fi
+	done
+	
+	echo "Input the name of the archive"
+	read -p "vcutar archive> " tarballName
+	quit "$tarballName"
+	
+	#Run createTarball with the arguments: fileDir, options, userFiles, tarballName
+	createTarball "$fileDir" "$options" "$userFiles" "$tarballName"
+}
+
+#----------------------------------------------------------------#
+#function extractArchive - Extracts archives from the current 	 #
+#			   directory.				 #
+#                                                                #
+#Input -                                                         #
+#	  archiveName - name of the tarball that the user wants  #
+#			to extract.				 #
+#								 #
+#	  outputDir - the output directory the user wants the 	 #
+#		      files extracted.				 #
+#								 #
+#                                                                #
+#Output - ""Not an archive"" to stdout	                         #
+#----------------------------------------------------------------#
+extractArchive () {
+	archiveName="$1"
+	outputDir="$2"
+	
+	#conditional to find the file exntension
+	if [[ "$archiveName" == *".tgz" ]]; then
+                 eval "tar -xzvf $archiveName"
+         elif [[ "$archiveName" == *".bz2" ]]; then
+                 eval "tar -xzvf $archiveName"
+         elif [[ "$archiveName" == *".tar" ]]; then
+                 eval "tar -xvf $archiveName"
+         else
+                 echo "can't extract"
+         fi
+}
+
+#----------------------------------------------------------------#
+#function extractArchiveInDiffDirr - Extracts archives and places#
+#				     files in a different 	 #
+#				     directory.		         #
+#                                                                #
+#Input -                                                         #
+#         archiveName - name of the tarball that the user wants  #
+#                       to extract.                              #
+#                                                                #
+#         outputDir - the output directory the user wants the    #
+#                     files extracted.                           #
+#                                                                #
+#                                                                #
+#Output - ""Not an archive"" to stdout                           #
+#----------------------------------------------------------------#
+extractArchiveInDifDirr () {
+	archiveName="$1"
+	outputDir="$2"
+	
+	#conditional to find the file exntension
+	if [[ "$archiveName" == *".tgz" ]]; then
+		eval "tar -xzvf $archiveName -C $outputDir" 
+	elif [[ "$archiveName" == *".bz2" ]]; then
+		eval "tar -xzvf $archiveName -C $outputDir"
+	elif [[ "$archiveName" == *".tar" ]]; then
+		eval "tar -xvf $archiveName -C $outputDir"
+	else
+		echo "can't extract"
+	fi
+}
+
+#----------------------------------------------------------------#
+#function extract - extracts a tar file based on user commands.  #
+#                                                                #
+#Input - N/A                                                     #
+#                                                                #
+#Output - "Input the name of the archive to be extracted" to 	 #
+#	   stdout			                         #
+#                                                                #
+#	  "Input the directory to extract to(* if current 	 #
+#	   directory). to stdout				 #
+#----------------------------------------------------------------#
+extract () {	
+	echo "Input the name of the archive to be extracted"
+	read -p "vcutar archive> " archiveName
+	quit "$archiveName"
+
+	echo "Input the directory to extract to(* if current directory)."
+	read -p "vcutar directory> " outputDir
+	quit "$outputDir"
+	
+	#condition to check if the user wants to extract tar in the current directory or a new directory
+	if [[ "$outputDir" == "*" ]]; then 
+		#Run extractArchive with the arguments: archiveName, outputDir
+		extractArchive "$archiveName" "$outputDir"
+	else 
+		#Run extractArchiveInDifDir with the arguments: archiveName, outputDir
+		extractArchiveInDifDirr "$archiveName" "$outputDir"
+	fi
+}
+
+#----------------------------------------------------------------#
+#function archive - Views tarball files. 			 #
+#                                                                #
+#Input - N/A                                                     #
+#                                                                #
+#Output - "Input the name of the archive to be viewed." to stdout#
+#----------------------------------------------------------------#
+view () {
+	echo "Input the name of the archive to be viewed."
+	read -p "vcutar archive> " archiveName
+	quit "$archiveName"
+	eval "tar -tf $archiveName"
+}
+
+#----------------------------#
+#Script execution starts here#
+#----------------------------#
+
+userCommand=$1
+
+#conditional to check what command the user entered
+if [[ "$userCommand" == "archive" ]]; then
+	#run archive
+	archive
+elif [[ "$userCommand" == "extract" ]]; then
+	#run extract
+	extract
+elif [[ "$userCommand" == "view" ]]; then
+	#run view
+	view	
+else
+	echo "can't find command"
+fi
